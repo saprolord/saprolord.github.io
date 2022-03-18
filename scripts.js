@@ -130,9 +130,9 @@ function factorycalc() {
   materialdata = [wood_log, copper, iron, stone, wolfram, coal, wood_plank,wood_frame,copper_ingot,copper_wire,iron_ingot,iron_gear,sand, silicon, glass, tungsten, graphite, carbide, coupler, lens, heat_sink, iron_plate, emagnet, metal_frame,steel, steel_rod, rotor, concrete, battery, motor, circuit, carbfibre,nanowire, computer, ind_frame,gyroscope,stabilizer,mag_field,quantum,microscope,turbocharg,supercomp,atomic,energy_cube,tank,compressor,particle,duplicator,earth_token,];
 
 
-  'Global column and line tracker'
-  column = 5
-  line = 4
+  'Global coordinats tracker'
+  xpos = 5
+  ypos = 4
 
   'Assign spreadsheet'
   'buildcalc = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("BuildCalc");'
@@ -185,42 +185,33 @@ function tier1(chkarr){
 }
 
 function calculate (material,rate){
-  var start = line;
+  var start = ypos;
 
   'If the material is a Tier 1, write the input materials required in a column, then go back to the previous column'
   if (tier1(material)){
-    buildcalc.getRange(line,column).setValue(material[0]);
-    buildcalc.getRange(line,column+1).setValue(material[3][0]*rate);
-    buildcalc.getRange(line+1,column).setValue(factoryname(material[1][0]));
-    buildcalc.getRange(line+1,column+1).setValue(Math.ceil(rate/material[1][1]));
-    buildcalc.getRange(line,column,2,2).setBorder(true, true, true, true, true, true, '#000000', SpreadsheetApp.BorderStyle.SOLID);
-    buildcalc.getRange(line,column).setBackground('#ffe599');
-    line=line+3;
+    DrawMatBox(material,material[3][0]*rate,factoryname(material[1][0]),Math.ceil(rate/material[1][1]),xpos,ypos);
+    ypos=ypos+100;
   }else
   {
-    buildcalc.getRange(line,column).setValue(material[0]);
-    buildcalc.getRange(line,column+1).setValue(rate);
-    buildcalc.getRange(line+1,column).setValue(factoryname(material[1][0]));
-    buildcalc.getRange(line+1,column+1).setValue(Math.ceil(rate/material[1][1]));
-    buildcalc.getRange(line,column,2,2).setBorder(true, true, true, true, true, true, '#000000', SpreadsheetApp.BorderStyle.SOLID);
-    buildcalc.getRange(line,column).setBackground('#ffe599');
+
+    'DrawMatBox(material,rate,factoryname(material[1][0]),Math.ceil(rate/material[1][1]),xpos,ypos); Why Rate???'
+    DrawMatBox(material,material[3][0]*rate,factoryname(material[1][0]),Math.ceil(rate/material[1][1]),xpos,ypos);
     
     if (material[2].length==1){
-      buildcalc.getRange(line+1,column+2,1,2).setBorder(true,null,null,null,null,null,'#000000', SpreadsheetApp.BorderStyle.SOLID);
-      column=column+4;
+      'buildcalc.getRange(line+1,column+2,1,2).setBorder(true,null,null,null,null,null,'#000000', SpreadsheetApp.BorderStyle.SOLID); Line drawing TBD' 
+      xpos=xpos+200;
       calculate(material[2][0],material[3][0]*rate);
-      column=column-4;     
+      xpos=xpos-200;     
     }else{
       
       for(var i=0; i<material[2].length; i++){
-        buildcalc.getRange(line+1,column+2,1,2).setBorder(true,null,null,null,null,null,'#000000', SpreadsheetApp.BorderStyle.SOLID);
-        Logger.log("Length %s, iterat %s, start %s, line %s, column %s", material[2].length, i, start, line, column);
-        if (i==material[2].length-1 && material[2].length>1){
-          buildcalc.getRange(start+1,column+2,line-start,1).setBorder(null,null,false,true,null,false,'#000000', SpreadsheetApp.BorderStyle.SOLID);
+        'buildcalc.getRange(line+1,column+2,1,2).setBorder(true,null,null,null,null,null,'#000000', SpreadsheetApp.BorderStyle.SOLID); Line drawing TBD'
+         if (i==material[2].length-1 && material[2].length>1){
+         'buildcalc.getRange(start+1,column+2,line-start,1).setBorder(null,null,false,true,null,false,'#000000', SpreadsheetApp.BorderStyle.SOLID); Line drawing TBD'
         }
-        column=column+4;
+         xpos=xpos+200;
         calculate(material[2][i],material[3][i]*rate);
-        column=column-4;
+         xpos=xpos+200;
 
       }
     }
