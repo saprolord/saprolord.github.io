@@ -70,6 +70,7 @@ function DrawMatBox(material, rate, workshop, qty, x, y){
 
 function factorycalc() {
  
+	alert("in factorycalc);
   'Recipes: Create the arrays and initalise the value'
   'Array format: [[Factory ID, production rate],[material1,material2,...],[material1 requirement, material2 requirement, ...]]'
   'FactoryIDs: Extractor=0, Workshop=1, Furnace=2, Machine Shop=3, Industrial=4, Forge=5, Manufacturer=6, Earth Teleporter=7'
@@ -140,9 +141,11 @@ function factorycalc() {
   'END OF GLOBAL VARIABLE'
 
   'Get user input'
+
   var index = document.getElementById('material').value;
   var rate = document.getElementById('rate').value;
-
+alert(index);
+	
   'Get Level of factories'
   var levelA = document.getElementById('extractor').value; 
   var levelB = document.getElementById('workshop').value; 
@@ -185,7 +188,9 @@ function tier1(chkarr){
 }
 
 function calculate (material,rate){
-  var start = ypos;
+  
+	alert("in calculate);
+	var start = ypos;
 
   'If the material is a Tier 1, write the input materials required in a column, then go back to the previous column'
   if (tier1(material)){
