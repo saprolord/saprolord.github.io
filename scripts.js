@@ -1,4 +1,4 @@
-function DrawMatBox(){
+function drawMatBox(){
   alert("It works")
 
 }
