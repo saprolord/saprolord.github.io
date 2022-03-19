@@ -1,6 +1,7 @@
 function drawMatBox(){
   const svg = document.querySelector('svg');
   const rect1 = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+  const rect2 = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
   const rect3 = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
   const rect4 = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
   const text1 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
@@ -24,7 +25,6 @@ function drawMatBox(){
   rect1.setAttribute('stroke-width', '1');
   svg.appendChild(rect1);
   
-  const rect2 = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
   rect2.setAttribute('x', x);
   rect2.setAttribute('y', y+35);
   rect2.setAttribute('width', '150');
