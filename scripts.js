@@ -13,8 +13,8 @@ function drawMatBox(){
 	var rate=10;
 	var workshop = "workshop";
 	var qty = 1;
-	var x = 50;
-	var y = 30;
+	var x = "50";
+	var y = "30";
 	
   rect1.setAttribute('x', x);
   rect1.setAttribute('y', y);
