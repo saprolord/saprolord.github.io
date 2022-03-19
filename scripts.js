@@ -14,7 +14,7 @@ const svg = document.querySelector('svg');
   rect1.setAttribute('height', '35');
   rect1.setAttribute('fill', '#B2D3C2');
   rect1.setAttribute('stroke', '#000000');
-  rect1.setAttribute('stroke-width', '1');
+  rect1.setAttribute('stroke-width', '5');
   svg.appendChild(rect1);
   
   const rect2 = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
