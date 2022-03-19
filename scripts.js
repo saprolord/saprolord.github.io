@@ -13,8 +13,8 @@ function drawMatBox(){
 	var rate=10;
 	var workshop = "workshop";
 	var qty = 1;
-	var x = "50";
-	var y = "30";
+	var x = '50';
+	var y = '30';
 	
   rect1.setAttribute('x', x);
   rect1.setAttribute('y', y);
@@ -40,7 +40,7 @@ function drawMatBox(){
   rect3.setAttribute('height', '35');
   rect3.setAttribute('fill', '#FFFFFF');
   rect3.setAttribute('stroke', '#000000');
-  rect3.setAttribute('stroke-width', '1');
+  rect3.setAttribute('stroke-width', '5');
   svg.appendChild(rect3);
 
   rect4.setAttribute('x', x+150);
