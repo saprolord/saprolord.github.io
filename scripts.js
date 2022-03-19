@@ -20,7 +20,7 @@ function drawMatBox(){
   rect1.setAttribute('y', y);
   rect1.setAttribute('width', '150');
   rect1.setAttribute('height', '35');
-  rect1.setAttribute('fill', '#B2D3C2');
+  rect1.setAttribute('fill', '#FFFFFF'); 
   rect1.setAttribute('stroke', '#000000');
   rect1.setAttribute('stroke-width', '1');
   svg.appendChild(rect1);
