@@ -1,4 +1,5 @@
-const svg = document.querySelector('svg');
+function DrawMatBox(material, rate, workshop, qty, x, y){
+  const svg = document.querySelector('svg');
   const rect1 = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
   const rect2 = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
   const rect3 = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
