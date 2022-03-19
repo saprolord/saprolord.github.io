@@ -1,5 +1,5 @@
-function drawMatBox(){
-  alert("It works!")
+function drawMatBox(material){
+  alert(material)
 
 
 }
