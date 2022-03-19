@@ -1,4 +1,4 @@
-function drawMatBox(material, rate, workshop, qty, x, y){
+function drawMatBox(){
   alert("It works!")
 
 
