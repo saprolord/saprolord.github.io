@@ -1,5 +1,5 @@
-function drawMatBox(material, rate, workshop, qty, x, y){
-const svg = document.querySelector('svg');
+function drawMatBox(){
+  const svg = document.querySelector('svg');
   const rect1 = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
   const rect3 = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
   const rect4 = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
@@ -8,6 +8,13 @@ const svg = document.querySelector('svg');
   const text3 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
   const text4 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
   
+	var material="iron";
+	var rate=10;
+	var workshop = "workshop";
+	var qty = 1;
+	var x = 50;
+	var y = 30;
+	
   rect1.setAttribute('x', x);
   rect1.setAttribute('y', y);
   rect1.setAttribute('width', '150');
