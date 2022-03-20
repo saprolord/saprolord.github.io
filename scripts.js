@@ -1,88 +1,3 @@
-function drawMatBox(matdata,coord) {
-  const svg = document.querySelector('svg');
-  const rect1 = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-  const rect2 = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-  const rect3 = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-  const rect4 = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-  const text1 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-  const text2 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-  const text3 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-  const text4 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-
-  if(matdata.length!=4){
-    matdata[0]='INVALID!';
-    matdata[1] = 'INVALID!';
-    matdata[2] = 'INVALID!';
-    matdata[3] = 'INVALID!';
-  }
-
-  var material = matdata[0];
-  var rate = matdata[1];
-  var workshop = matdata[2];
-  var qty = matdata[3];
-  var x = coord[0];
-  var y = coord[1];
-
-  rect1.setAttribute('x', x);
-  rect1.setAttribute('y', y);
-  rect1.setAttribute('width', '150');
-  rect1.setAttribute('height', '35');
-  rect1.setAttribute('fill', '#99EDC3');
-  rect1.setAttribute('stroke', '#000000');
-  rect1.setAttribute('stroke-width', '1');
-  svg.appendChild(rect1);
-
-  rect2.setAttribute('x', x);
-  rect2.setAttribute('y', y + 35);
-  rect2.setAttribute('width', '150');
-  rect2.setAttribute('height', '35');
-  rect2.setAttribute('fill', '#E6DBAC');
-  rect2.setAttribute('stroke', '#000000');
-  rect2.setAttribute('stroke-width', '1');
-  svg.appendChild(rect2);
-
-  rect3.setAttribute('x', x + 150);
-  rect3.setAttribute('y', y);
-  rect3.setAttribute('width', '35');
-  rect3.setAttribute('height', '35');
-  rect3.setAttribute('fill', '#FFFFFF');
-  rect3.setAttribute('stroke', '#000000');
-  rect3.setAttribute('stroke-width', '1');
-  svg.appendChild(rect3);
-
-  rect4.setAttribute('x', x + 150);
-  rect4.setAttribute('y', y + 35);
-  rect4.setAttribute('width', '35');
-  rect4.setAttribute('height', '35');
-  rect4.setAttribute('fill', '#FFFFFF');
-  rect4.setAttribute('stroke', '#000000');
-  rect4.setAttribute('stroke-width', '1');
-  svg.appendChild(rect4);
-
-  text1.setAttributeNS(null, "x", x + 10);
-  text1.setAttributeNS(null, "y", y + 20);
-  text1.appendChild(document.createTextNode(material));
-  svg.appendChild(text1);
-
-  text2.setAttributeNS(null, "x", x + 10);
-  text2.setAttributeNS(null, "y", y + 55);
-  text2.appendChild(document.createTextNode(workshop));
-  svg.appendChild(text2);
-
-  text3.setAttributeNS(null, "x", x + 160);
-  text3.setAttributeNS(null, "y", y + 20);
-  text3.appendChild(document.createTextNode(rate));
-  svg.appendChild(text3);
-
-  text4.setAttributeNS(null, "x", x + 160);
-  text4.setAttributeNS(null, "y", y + 55);
-  text4.appendChild(document.createTextNode(qty));
-  svg.appendChild(text4);
-
-
-}
-
-
 function factorycalc() {
 
   'Recipes: Create the arrays and initalise the value'
@@ -174,9 +89,9 @@ function factorycalc() {
   for (i = 0; i < materialdata.length; i++) {
     materialdata[i][1][1] = materialdata[i][1][1] * boostFactory[levelFactory[materialdata[i][1][0]]];
   }
-
+  clear(document.querySelector('svg'));
+  
   'Launch main function to calculate the required elementary'
-  alert('Material: ' + materialdata[index][0] + ' being calculated at ' + rate + '/min');
   calculate(materialdata[index], rate);
 
   'END'
@@ -206,15 +121,13 @@ function calculate(material, rate) {
 
   'If the material is a Tier 1, write the input materials required in a column, then go back to the previous column'
   if (material[2]==0) {
-    drawMatBox([material[0], material[3][0] * rate, factoryname(material[1][0]), Math.ceil(rate / material[1][1])], [xpos, ypos]);
-    ypos = ypos + 100;
+    drawMatBox([material[0], rate, factoryname(material[1][0]), Math.ceil(rate / material[1][1])], [xpos, ypos]);
+    'ypos = ypos + 100;'
   } else {
-
-    'DrawMatBox(material,rate,factoryname(material[1][0]),Math.ceil(rate/material[1][1]),xpos,ypos); Why Rate???'
-    drawMatBox([material[0], material[3][0] * rate, factoryname(material[1][0]), Math.ceil(rate / material[1][1])], [xpos, ypos]);
-
+    drawMatBox([material[0], rate, factoryname(material[1][0]), Math.ceil(rate / material[1][1])], [xpos, ypos]);
     if (material[2].length == 1) {
       "buildcalc.getRange(line+1,column+2,1,2).setBorder(true,null,null,null,null,null,'#000000', SpreadsheetApp.BorderStyle.SOLID); Line drawing TBD'"
+      lineconnect([xpos + 150, ypos + 35], [xpos + 200, ypos + 35])
       xpos = xpos + 200;
       calculate(material[2][0], material[3][0] * rate);
       xpos = xpos - 200;
@@ -222,17 +135,22 @@ function calculate(material, rate) {
 
       for (var i = 0; i < material[2].length; i++) {
         "buildcalc.getRange(line+1,column+2,1,2).setBorder(true,null,null,null,null,null,'#000000', SpreadsheetApp.BorderStyle.SOLID); Line drawing TBD"
-        if (i == material[2].length - 1 && material[2].length > 1) {
+        if (i > 0) {
+          lineconnect([xpos + 192, start + 35], [xpos + 192, ypos + 135]);
+          lineconnect([xpos + 192, ypos + 135], [xpos + 200, ypos + 135]);
+          'draw line from (xpos+150,ypos+35) to (xpos+200,ypos+135)'
+          ypos = ypos + 100;
           "buildcalc.getRange(start+1,column+2,line-start,1).setBorder(null,null,false,true,null,false,'#000000', SpreadsheetApp.BorderStyle.SOLID); Line drawing TBD"
+        }else{
+          lineconnect([xpos + 185, start + 35], [xpos + 200, ypos + 35]);
+          'draw line from (xpos+150,ypos+35) to (xpos+200,ypos+35)'
         }
         xpos = xpos + 200;
         calculate(material[2][i], material[3][i] * rate);
         xpos = xpos - 200;
-
       }
     }
   }
-
 }
 
 
@@ -249,3 +167,112 @@ function factoryname(id) {
   if (id == 7) { return "Earth Teleporter" };
 
 }
+
+function clear(prnt) {
+  'Clear the svg space (svg space as input)'
+  let children = prnt.children;
+  for (let i = 0; i < children.length;) {
+    let el = children[i];
+    if (el.tagName !== 'defs') {
+      el.remove();
+    } else (i++);
+  }
+}
+
+function lineconnect([x1,y1],[x2,y2]){
+  const svg = document.querySelector('svg');
+  const newLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  newLine.setAttribute('x1', x1);
+  newLine.setAttribute('y1', y1);
+  newLine.setAttribute('x2', x2);
+  newLine.setAttribute('y2', y2);
+  newLine.setAttribute('stroke', '#000000');
+  newLine.setAttribute('stroke-width', '1');
+  svg.appendChild(newLine);
+}
+
+function drawMatBox(matdata, coord) {
+  const svg = document.querySelector('svg');
+  const rect1 = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+  const rect2 = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+  const rect3 = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+  const rect4 = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+  const text1 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  const text2 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  const text3 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+  const text4 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+
+  if (matdata.length != 4) {
+    matdata[0] = 'INVALID!';
+    matdata[1] = 'INVALID!';
+    matdata[2] = 'INVALID!';
+    matdata[3] = 'INVALID!';
+  }
+
+  var material = matdata[0];
+  var rate = matdata[1];
+  var workshop = matdata[2];
+  var qty = matdata[3];
+  var x = coord[0];
+  var y = coord[1];
+
+  rect1.setAttribute('x', x);
+  rect1.setAttribute('y', y);
+  rect1.setAttribute('width', '150');
+  rect1.setAttribute('height', '35');
+  rect1.setAttribute('fill', '#99EDC3');
+  rect1.setAttribute('stroke', '#000000');
+  rect1.setAttribute('stroke-width', '1');
+  svg.appendChild(rect1);
+
+  rect2.setAttribute('x', x);
+  rect2.setAttribute('y', y + 35);
+  rect2.setAttribute('width', '150');
+  rect2.setAttribute('height', '35');
+  rect2.setAttribute('fill', '#E6DBAC');
+  rect2.setAttribute('stroke', '#000000');
+  rect2.setAttribute('stroke-width', '1');
+  svg.appendChild(rect2);
+
+  rect3.setAttribute('x', x + 150);
+  rect3.setAttribute('y', y);
+  rect3.setAttribute('width', '35');
+  rect3.setAttribute('height', '35');
+  rect3.setAttribute('fill', '#FFFFFF');
+  rect3.setAttribute('stroke', '#000000');
+  rect3.setAttribute('stroke-width', '1');
+  svg.appendChild(rect3);
+
+  rect4.setAttribute('x', x + 150);
+  rect4.setAttribute('y', y + 35);
+  rect4.setAttribute('width', '35');
+  rect4.setAttribute('height', '35');
+  rect4.setAttribute('fill', '#FFFFFF');
+  rect4.setAttribute('stroke', '#000000');
+  rect4.setAttribute('stroke-width', '1');
+  svg.appendChild(rect4);
+
+  text1.setAttributeNS(null, "x", x + 10);
+  text1.setAttributeNS(null, "y", y + 20);
+  text1.appendChild(document.createTextNode(material));
+  svg.appendChild(text1);
+
+  text2.setAttributeNS(null, "x", x + 10);
+  text2.setAttributeNS(null, "y", y + 55);
+  text2.appendChild(document.createTextNode(workshop));
+  svg.appendChild(text2);
+
+  text3.setAttributeNS(null, "x", x + 160);
+  text3.setAttributeNS(null, "y", y + 20);
+  text3.appendChild(document.createTextNode(rate));
+  svg.appendChild(text3);
+
+  text4.setAttributeNS(null, "x", x + 160);
+  text4.setAttributeNS(null, "y", y + 55);
+  text4.appendChild(document.createTextNode(qty));
+  svg.appendChild(text4);
+
+
+}
+
+
