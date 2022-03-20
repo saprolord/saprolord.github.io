@@ -50,8 +50,8 @@ function factorycalc() {
   var tank = ["Tank", [4, 6], [glass, concrete, carbide], [2, 4, 4]];
   var compressor = ["Matter Compressor", [6, 2], [ind_frame, turbocharg, motor, tank], [1, 2, 2, 1]];
   var particle = ["Particle Glue", [1, 20], [compressor], [0.1]];
-  var duplicator = ["Matter Duplicator", [6, 2 / 3], [atomic, quantum, energy_cube, particle], [4, 2, 5, 100]];
-  var earth_token = ["Earth Token", [7, 60 / 42], [duplicator], [1]];
+  var duplicator = ["Matter Duplicator", [6, 2/3], [atomic, quantum, energy_cube, particle], [4, 2, 5, 100]];
+  var earth_token = ["Earth Token", [7, 60/42], [duplicator], [1]];
 
 
   '________________________'
@@ -61,8 +61,8 @@ function factorycalc() {
 
 
   'Global coordinats tracker'
-  xpos = 5
-  ypos = 4
+  xpos = 5;
+  ypos = 4;
   
   '_________________________'
   'END OF GLOBAL VARIABLE'
@@ -89,7 +89,9 @@ function factorycalc() {
   for (i = 0; i < materialdata.length; i++) {
     materialdata[i][1][1] = materialdata[i][1][1] * boostFactory[levelFactory[materialdata[i][1][0]]];
   }
-  clear(document.querySelector('svg'));
+
+  const svg = document.querySelector('svg');
+  clear(svg);
   
   'Launch main function to calculate the required elementary'
   calculate(materialdata[index], rate);
@@ -121,31 +123,37 @@ function calculate(material, rate) {
 
   'If the material is a Tier 1, write the input materials required in a column, then go back to the previous column'
   if (material[2]==0) {
+    if (xpos > svg.getAttribute('width')) {
+      svg.setAttribute('width', xpos + 250);
+    }
     drawMatBox([material[0], rate, factoryname(material[1][0]), Math.ceil(rate / material[1][1])], [xpos, ypos]);
-    'ypos = ypos + 100;'
   } else {
     drawMatBox([material[0], rate, factoryname(material[1][0]), Math.ceil(rate / material[1][1])], [xpos, ypos]);
     if (material[2].length == 1) {
-      "buildcalc.getRange(line+1,column+2,1,2).setBorder(true,null,null,null,null,null,'#000000', SpreadsheetApp.BorderStyle.SOLID); Line drawing TBD'"
-      lineconnect([xpos + 150, ypos + 35], [xpos + 200, ypos + 35])
+      lineconnect([xpos + 150, ypos + 35], [xpos + 200, ypos + 35]);
       xpos = xpos + 200;
+      if(xpos+200 > svg.getAttribute('width')) {
+        svg.setAttribute('width', xpos + 250);
+      }
       calculate(material[2][0], material[3][0] * rate);
       xpos = xpos - 200;
     } else {
 
       for (var i = 0; i < material[2].length; i++) {
-        "buildcalc.getRange(line+1,column+2,1,2).setBorder(true,null,null,null,null,null,'#000000', SpreadsheetApp.BorderStyle.SOLID); Line drawing TBD"
-        if (i > 0) {
+          if (i > 0) {
           lineconnect([xpos + 192, start + 35], [xpos + 192, ypos + 135]);
           lineconnect([xpos + 192, ypos + 135], [xpos + 200, ypos + 135]);
-          'draw line from (xpos+150,ypos+35) to (xpos+200,ypos+135)'
           ypos = ypos + 100;
-          "buildcalc.getRange(start+1,column+2,line-start,1).setBorder(null,null,false,true,null,false,'#000000', SpreadsheetApp.BorderStyle.SOLID); Line drawing TBD"
+            if (ypos+70 > svg.getAttribute('height')) {
+              svg.setAttribute('height', ypos + 80);
+          }
         }else{
           lineconnect([xpos + 185, start + 35], [xpos + 200, ypos + 35]);
-          'draw line from (xpos+150,ypos+35) to (xpos+200,ypos+35)'
         }
         xpos = xpos + 200;
+        if (xpos+200 > svg.getAttribute('width')) {
+          svg.setAttribute('width',xpos+210);
+        }
         calculate(material[2][i], material[3][i] * rate);
         xpos = xpos - 200;
       }
