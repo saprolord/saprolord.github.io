@@ -23,6 +23,7 @@
 		border: 1px solid #ccc;
 		border-radius: 4px;
 		box-sizing: border-box;
+    min-width: 45px;
 	}
 
 	button {
@@ -57,8 +58,7 @@
 		border-radius: 4px;
 	}
 
-	th,
-	td {
+	th,	td {
 		padding: 5px;
 	}
 </style>
@@ -140,18 +140,17 @@
 		<table style="width:100%">
 			<tr>
 				<th style="width:23%"></th>
-				<th style="width:10.3333%"></th>
+				<th style="width:10.333%"></th>
 				<th style="width:23%"></th>
-				<th style="width:10.3333%"></th>
+				<th style="width:10.333%"></th>
 				<th style="width:23%"></th>
-				<th style="width:10.3333%"></th>
-
+				<th style="width:10.333%"></th>
 			<tr>
 				<td>
 					<p>Extractor<p>
 				</td>
 				<td>
-					<select id="extractor" name="extractor">
+					<select id="extractor" name="extractor" min-width="100px">
                 <option value="0">1</option>
                 <option value="1">2</option>
                 <option value="2">3</option>
