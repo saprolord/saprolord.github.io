@@ -119,10 +119,7 @@ function tier1(chkarr) {
 }
 
 function calculate(material, rate) {
-
-
 	var start = ypos;
-
   'If the material is a Tier 1, write the input materials required in a column, then go back to the previous column'
 
   if (material.recipe==0) {
@@ -221,9 +218,9 @@ function drawMatBox(matdata, coord) {
   }
 
   var material = matdata[0];
-  var rate = matdata[1];
+  var rate = Math.round(matdata[1]*10000)/10000;
   var workshop = matdata[2];
-  var qty = matdata[3];
+  var qty = Math.round(matdata[3]*10000)/10000;
   var x = coord[0];
   var y = coord[1];
 
@@ -282,7 +279,6 @@ function drawMatBox(matdata, coord) {
   text4.setAttributeNS(null, "y", y + 55);
   text4.appendChild(document.createTextNode(qty));
   svg.appendChild(text4);
-
 
 }
 
