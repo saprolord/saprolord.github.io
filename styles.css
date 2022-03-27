@@ -61,7 +61,6 @@ padding: 5px;
 margin: 10px 0px;
 align-items: center;
 width: 170px;
-align-items: center;
 justify-content: center;
 box-sizing: border-box;
 }
@@ -115,7 +114,7 @@ align-items: center;
   padding: 0px;
   }
 
-  .h1{
-    font-size:20px;
+  .levelfact{
+    width: 153px;
   }
 }
