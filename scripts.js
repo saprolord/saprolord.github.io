@@ -1,71 +1,73 @@
 function factorycalc() {
-  
+
   'This is the main function to call out to create the recipe tree as selected in the "desired material" field at the rate defined in "desired rate"'
   'This body sets up all the first level recipes as a MatDef class (see constructor further down)'
-  'MatDef class format: (name, factory:[Factory ID, production rate],recipe:[material1,material2,...],quantity: [material1 requirement, material2 requirement, ...])'
+  'MatDef class format: (name, factory:[Factory ID, production rate],recipe:[material1,material2,...],quantity: [material1 requirement, material2 requirement, ...], material ID)'
   'FactoryIDs: Extractor=0, Workshop=1, Furnace=2, Machine Shop=3, Industrial=4, Forge=5, Manufacturer=6, Earth Teleporter=7'
 
-  const wood_log = new MatDef("Wood Log", [0, 7.5], 0, [1]);
-  const copper = new MatDef("Copper", [0, 7.5], 0, [1]);
-  const iron = new MatDef("Iron", [0, 7.5], 0, [1]);
-  const stone = new MatDef("Stone", [0, 7.5], 0, [1]);
-  const wolfram = new MatDef("Wolframite", [0, 7.5], 0, [1]);
-  const coal = new MatDef("Coal", [0, 7.5], 0, [1]);
-  const wood_plank = new MatDef("Wood Plank", [1, 15], [wood_log], [1]);
-  const wood_frame = new MatDef("Wood Frame", [1, 7.5], [wood_plank], [4]);
-  const copper_ingot = new MatDef("Copper Ingot", [2, 30], [copper], [1]);
-  const copper_wire = new MatDef("Copper Wire", [1, 30], [copper_ingot], [1.5]);
-  const iron_ingot = new MatDef("Iron Ingot", [2, 30], [iron], [1]);
-  const iron_gear = new MatDef("Iron Gear", [1, 15], [iron_ingot], [2]);
-  const sand = new MatDef("Sand", [1, 40], [stone], [1]);
-  const silicon = new MatDef("Silicon", [2, 20], [sand], [2]);
-  const glass = new MatDef("Glass", [2, 10], [sand], [4]);
-  const tungsten = new MatDef("Tungsten Ore", [2, 24], [wolfram], [5]);
-  const graphite = new MatDef("Graphite", [5, 15], [coal, wood_log], [3, 3]);
-  const carbide = new MatDef("Tungsten Carbide", [5, 12], [tungsten, graphite], [2, 1]);
-  const coupler = new MatDef("Coupler", [1, 6], [carbide], [1]);
-  const lens = new MatDef("Condenser Lens", [1, 20], [glass], [3]);
-  const heat_sink = new MatDef("Heat Sink", [1, 10], [copper_ingot], [5]);
-  const iron_plate = new MatDef("Iron Plating", [1, 20], [iron_ingot], [2]);
-  const emagnet = new MatDef("Electromagnet", [3, 7.5], [iron_ingot, copper_wire], [6, 2]);
-  const metal_frame = new MatDef("Metal Frame", [3, 5], [wood_frame, iron_plate], [1, 4]);
-  const steel = new MatDef("Steel", [5, 7.5], [graphite, iron], [1, 6]);
-  const steel_rod = new MatDef("Steel Rod", [1, 15], [steel], [3]);
-  const rotor = new MatDef("Rotor", [3, 10], [steel_rod, iron_plate], [1, 2]);
-  const concrete = new MatDef("Concrete", [5, 7.5], [sand, steel_rod], [10, 1]);
-  const battery = new MatDef ("Battery", [1, 2.5], [emagnet, graphite], [8, 8]);
-  const motor = new MatDef("Electric Motor", [5, 3], [battery, iron_gear, rotor], [1, 4, 2]);
-  const circuit = new MatDef ("Logic Circuit", [3, 10], [copper_wire, silicon], [3, 2]);
-  const carbfibre = new MatDef ("Carbon Fibre", [1, 7.5], [graphite], [4]);
-  const nanowire = new MatDef("Nano Wire", [3, 5], [carbfibre, glass], [2, 4]);
-  const computer = new MatDef ("Computer", [4, 7.5], [heat_sink, metal_frame, circuit], [3, 1, 2]);
-  const ind_frame = new MatDef("Industrial Frame", [4, 3], [concrete, metal_frame, carbide], [6, 2, 8]);
-  const gyroscope = new MatDef("Gyroscope", [3, 5], [copper_wire, rotor], [12, 2]);
-  const stabilizer = new MatDef("Stabilizer", [4, 2.5], [computer, motor, gyroscope], [1, 1, 2]);
-  const mag_field = new MatDef("Mag. Field Generator", [7, 1.5], [stabilizer, ind_frame, emagnet, nanowire], [1, 1, 10, 10]);
-  const quantum = new MatDef("Quantum Entangler", [3, 1], [mag_field, stabilizer], [1, 2]);
-  const microscope = new MatDef("Electron Microscope", [4, 2.5], [nanowire, emagnet, lens, metal_frame], [2, 8, 4, 2]);
-  const turbocharg = new MatDef("Turbocharger", [6, 4], [iron_gear, circuit, nanowire, coupler], [8, 4, 2, 4]);
-  const supercomp = new MatDef("Super Computer", [6, 2], [computer, heat_sink, turbocharg, coupler], [2, 8, 1, 8]);
-  const atomic = new MatDef("Atomic Locator", [6, 2], [supercomp, microscope, concrete, copper_wire], [2, 2, 24, 50]);
-  const energy_cube = new MatDef("Energy Cube", [3, 2], [battery, ind_frame], [2, 1]);
-  const tank = new MatDef("Tank", [4, 6], [glass, concrete, carbide], [2, 4, 4]);
-  const compressor = new MatDef("Matter Compressor", [6, 2], [ind_frame, turbocharg, motor, tank], [1, 2, 2, 1]);
-  const particle = new MatDef("Particle Glue", [1, 20], [compressor], [0.1]);
-  const duplicator = new MatDef("Matter Duplicator", [6, 2/3], [atomic, quantum, energy_cube, particle], [4, 2, 5, 100]);
-  const earth_token = new MatDef("Earth Token", [7, 60/42], [duplicator], [1]);
+  const wood_log = new MatDef("Wood Log", [0, 7.5], 0, [1], 0);
+  const copper = new MatDef("Copper", [0, 7.5], 0, [1], 1);
+  const iron = new MatDef("Iron", [0, 7.5], 0, [1], 2);
+  const stone = new MatDef("Stone", [0, 7.5], 0, [1], 3);
+  const wolfram = new MatDef("Wolframite", [0, 7.5], 0, [1], 4);
+  const coal = new MatDef("Coal", [0, 7.5], 0, [1], 5);
+  const wood_plank = new MatDef("Wood Plank", [1, 15], [wood_log], [1], 6);
+  const wood_frame = new MatDef("Wood Frame", [1, 7.5], [wood_plank], [4], 7);
+  const copper_ingot = new MatDef("Copper Ingot", [2, 30], [copper], [1], 8);
+  const copper_wire = new MatDef("Copper Wire", [1, 30], [copper_ingot], [1.5], 9);
+  const iron_ingot = new MatDef("Iron Ingot", [2, 30], [iron], [1], 10);
+  const iron_gear = new MatDef("Iron Gear", [1, 15], [iron_ingot], [2], 11);
+  const sand = new MatDef("Sand", [1, 40], [stone], [1], 12);
+  const silicon = new MatDef("Silicon", [2, 20], [sand], [2], 13);
+  const glass = new MatDef("Glass", [2, 10], [sand], [4], 14);
+  const tungsten = new MatDef("Tungsten Ore", [2, 24], [wolfram], [5], 15);
+  const graphite = new MatDef("Graphite", [5, 15], [coal, wood_log], [3, 3], 16);
+  const carbide = new MatDef("Tungsten Carbide", [5, 12], [tungsten, graphite], [2, 1], 17);
+  const coupler = new MatDef("Coupler", [1, 6], [carbide], [1], 18);
+  const lens = new MatDef("Condenser Lens", [1, 20], [glass], [3], 19);
+  const heat_sink = new MatDef("Heat Sink", [1, 10], [copper_ingot], [5], 20);
+  const iron_plate = new MatDef("Iron Plating", [1, 20], [iron_ingot], [2], 21);
+  const emagnet = new MatDef("Electromagnet", [3, 7.5], [iron_ingot, copper_wire], [6, 2], 22);
+  const metal_frame = new MatDef("Metal Frame", [3, 5], [wood_frame, iron_plate], [1, 4], 23);
+  const steel = new MatDef("Steel", [5, 7.5], [graphite, iron], [1, 6], 24);
+  const steel_rod = new MatDef("Steel Rod", [1, 15], [steel], [3], 25);
+  const rotor = new MatDef("Rotor", [3, 10], [steel_rod, iron_plate], [1, 2], 26);
+  const concrete = new MatDef("Concrete", [5, 7.5], [sand, steel_rod], [10, 1], 27);
+  const battery = new MatDef("Battery", [1, 2.5], [emagnet, graphite], [8, 8], 28);
+  const motor = new MatDef("Electric Motor", [5, 3], [battery, iron_gear, rotor], [1, 4, 2], 29);
+  const circuit = new MatDef("Logic Circuit", [3, 10], [copper_wire, silicon], [3, 2], 30);
+  const carbfibre = new MatDef("Carbon Fibre", [1, 7.5], [graphite], [4], 31);
+  const nanowire = new MatDef("Nano Wire", [3, 5], [carbfibre, glass], [2, 4], 32);
+  const computer = new MatDef("Computer", [4, 7.5], [heat_sink, metal_frame, circuit], [3, 1, 2], 33);
+  const ind_frame = new MatDef("Industrial Frame", [4, 3], [concrete, metal_frame, carbide], [6, 2, 8], 34);
+  const gyroscope = new MatDef("Gyroscope", [3, 5], [copper_wire, rotor], [12, 2], 35);
+  const stabilizer = new MatDef("Stabilizer", [4, 2.5], [computer, motor, gyroscope], [1, 1, 2], 36);
+  const mag_field = new MatDef("Mag. Field Generator", [7, 1.5], [stabilizer, ind_frame, emagnet, nanowire], [1, 1, 10, 10], 37);
+  const quantum = new MatDef("Quantum Entangler", [3, 1], [mag_field, stabilizer], [1, 2], 38);
+  const microscope = new MatDef("Electron Microscope", [4, 2.5], [nanowire, emagnet, lens, metal_frame], [2, 8, 4, 2], 39);
+  const turbocharg = new MatDef("Turbocharger", [6, 4], [iron_gear, circuit, nanowire, coupler], [8, 4, 2, 4], 40);
+  const supercomp = new MatDef("Super Computer", [6, 2], [computer, heat_sink, turbocharg, coupler], [2, 8, 1, 8], 41);
+  const atomic = new MatDef("Atomic Locator", [6, 2], [supercomp, microscope, concrete, copper_wire], [2, 2, 24, 50], 42);
+  const energy_cube = new MatDef("Energy Cube", [3, 2], [battery, ind_frame], [2, 1], 43);
+  const tank = new MatDef("Tank", [4, 6], [glass, concrete, carbide], [2, 4, 4], 44);
+  const compressor = new MatDef("Matter Compressor", [6, 2], [ind_frame, turbocharg, motor, tank], [1, 2, 2, 1], 45);
+  const particle = new MatDef("Particle Glue", [1, 20], [compressor], [0.1], 46);
+  const duplicator = new MatDef("Matter Duplicator", [6, 2 / 3], [atomic, quantum, energy_cube, particle], [4, 2, 5, 100], 47);
+  const earth_token = new MatDef("Earth Token", [7, 60 / 42], [duplicator], [1], 48);
 
 
   '________________________'
   'GLOBAL VARIABLES'
   'Material data matrix'
   materialdata = [wood_log, copper, iron, stone, wolfram, coal, wood_plank, wood_frame, copper_ingot, copper_wire, iron_ingot, iron_gear, sand, silicon, glass, tungsten, graphite, carbide, coupler, lens, heat_sink, iron_plate, emagnet, metal_frame, steel, steel_rod, rotor, concrete, battery, motor, circuit, carbfibre, nanowire, computer, ind_frame, gyroscope, stabilizer, mag_field, quantum, microscope, turbocharg, supercomp, atomic, energy_cube, tank, compressor, particle, duplicator, earth_token,];
-
+  materialtotal = [0];
+  materialtotal.length = 49;
+  zero(materialtotal);
 
   'Global coordinats tracker'
   xpos = 5;
   ypos = 4;
-  
+
   '_________________________'
   'END OF GLOBAL VARIABLE'
 
@@ -94,9 +96,21 @@ function factorycalc() {
 
   const svg = document.querySelector('svg');
   clear(svg);
-  
-  'Launch main function to calculate the required elementary'
+
+  'Launch main function to calculate the required materials'
   calculate(materialdata[index], rate);
+  materialOutput();
+
+  document.getElementById("box3").style.display = "flex";
+  if (window.matchMedia("(max-width: 800px)").matches) {
+    document.getElementById("box3").style.width = "100%";
+    document.getElementById("levelfact").style.width = "100%";
+    document.getElementById('box3').scrollIntoView()
+  } else {
+    document.getElementById("box3").style.width = "30%";
+    document.getElementById("levelfact").style.width = "30%";
+
+  }
 
   'END'
 }
@@ -104,7 +118,7 @@ function factorycalc() {
 
 function zero(material) {
   'Set an array to have all value as zero'
-  for (var i = 0; i < (material.length - 1); i++) {
+  for (var i = 0; i < (material.length); i++) {
     material[i] = 0;
   }
 }
@@ -119,20 +133,22 @@ function tier1(chkarr) {
 }
 
 function calculate(material, rate) {
-	var start = ypos;
+  var start = ypos;
   'If the material is a Tier 1, write the input materials required in a column, then go back to the previous column'
 
-  if (material.recipe==0) {
+  if (material.recipe == 0) {
     if (xpos > svg.getAttribute('width')) {
       svg.setAttribute('width', xpos + 250);
     }
     drawMatBox([material.name, rate, factoryname(material.factory[0]), Math.ceil(rate / material.factory[1])], [xpos, ypos]);
+    materialtotal[material.ID] = materialtotal[material.ID] + rate;
   } else {
     drawMatBox([material.name, rate, factoryname(material.factory[0]), Math.ceil(rate / material.factory[1])], [xpos, ypos]);
+    materialtotal[material.ID] = materialtotal[material.ID] + rate;
     if (material.recipe.length == 1) {
       lineconnect([xpos + 150, ypos + 35], [xpos + 200, ypos + 35]);
       xpos = xpos + 200;
-      if(xpos+200 > svg.getAttribute('width')) {
+      if (xpos + 200 > svg.getAttribute('width')) {
         svg.setAttribute('width', xpos + 250);
       }
       calculate(material.recipe[0], material.quantity[0] * rate);
@@ -140,19 +156,19 @@ function calculate(material, rate) {
     } else {
 
       for (var i = 0; i < material.recipe.length; i++) {
-          if (i > 0) {
+        if (i > 0) {
           lineconnect([xpos + 192, start + 35], [xpos + 192, ypos + 135]);
           lineconnect([xpos + 192, ypos + 135], [xpos + 200, ypos + 135]);
           ypos = ypos + 100;
-            if (ypos+70 > svg.getAttribute('height')) {
-              svg.setAttribute('height', ypos + 80);
+          if (ypos + 70 > svg.getAttribute('height')) {
+            svg.setAttribute('height', ypos + 80);
           }
-        }else{
+        } else {
           lineconnect([xpos + 185, start + 35], [xpos + 200, ypos + 35]);
         }
         xpos = xpos + 200;
-        if (xpos+200 > svg.getAttribute('width')) {
-          svg.setAttribute('width',xpos+210);
+        if (xpos + 200 > svg.getAttribute('width')) {
+          svg.setAttribute('width', xpos + 210);
         }
         calculate(material.recipe[i], material.quantity[i] * rate);
         xpos = xpos - 200;
@@ -187,7 +203,7 @@ function clear(prnt) {
   }
 }
 
-function lineconnect([x1,y1],[x2,y2]){
+function lineconnect([x1, y1], [x2, y2]) {
   const svg = document.querySelector('svg');
   const newLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
   newLine.setAttribute('x1', x1);
@@ -218,9 +234,9 @@ function drawMatBox(matdata, coord) {
   }
 
   var material = matdata[0];
-  var rate = Math.round(matdata[1]*10000)/10000;
+  var rate = Math.round(matdata[1] * 10000) / 10000;
   var workshop = matdata[2];
-  var qty = Math.round(matdata[3]*10000)/10000;
+  var qty = Math.round(matdata[3] * 10000) / 10000;
   var x = coord[0];
   var y = coord[1];
 
@@ -282,17 +298,35 @@ function drawMatBox(matdata, coord) {
 
 }
 
+function materialOutput() {
+
+  var total = "";
+  var matId = "";
+
+  for (var i = 0; i < materialtotal.length; i++) {
+    total = materialtotal[i]
+    if (i < 10) {
+      matId = ("mat0" + i);
+      document.getElementById(matId).innerHTML = Math.round(total * 1000) / 1000;
+    } else {
+      matId = ("mat" + i);
+      document.getElementById(matId).innerHTML = Math.round(total * 1000) / 1000;;
+    }
+  }
+}
+
 class MatDef {
-'MatDef class is the definition of the material recipes as:'
-'name: name of the material as string'
-'factory: [factory name required, maximum rate of production]'
-'recipe: [list of material required]'
-'quantity: [list of quantity required for each material in the order defined in [recipe]]'
-  constructor(nameStr,factoryArr,recipeArr,quantityArr) {
-    this.name=nameStr;
-    this.factory=factoryArr;
-    this.recipe=recipeArr;
-    this.quantity=quantityArr;
+  'MatDef class is the definition of the material recipes as:'
+  'name: name of the material as string'
+  'factory: [factory name required, maximum rate of production]'
+  'recipe: [list of material required]'
+  'quantity: [list of quantity required for each material in the order defined in [recipe]]'
+  constructor(nameStr, factoryArr, recipeArr, quantityArr, matId) {
+    this.name = nameStr;
+    this.factory = factoryArr;
+    this.recipe = recipeArr;
+    this.quantity = quantityArr;
+    this.ID = matId;
   }
 }
 
