@@ -27,7 +27,7 @@ function factorycalc() {
   const lens = new MatDef("Condenser Lens", [1, 20], [glass], [3], 19);
   const heat_sink = new MatDef("Heat Sink", [1, 10], [copper_ingot], [5], 20);
   const iron_plate = new MatDef("Iron Plating", [1, 20], [iron_ingot], [2], 21);
-  const emagnet = new MatDef("Electromagnet", [3, 7.5], [iron_ingot, copper_wire], [6, 2], 22);
+  const emagnet = new MatDef("Electromagnet", [3, 7.5], [iron_ingot, copper_wire], [2, 6], 22);
   const metal_frame = new MatDef("Metal Frame", [3, 5], [wood_frame, iron_plate], [1, 4], 23);
   const steel = new MatDef("Steel", [5, 7.5], [graphite, iron], [1, 6], 24);
   const steel_rod = new MatDef("Steel Rod", [1, 15], [steel], [3], 25);
@@ -38,7 +38,7 @@ function factorycalc() {
   const circuit = new MatDef("Logic Circuit", [3, 10], [copper_wire, silicon], [3, 2], 30);
   const carbfibre = new MatDef("Carbon Fibre", [1, 7.5], [graphite], [4], 31);
   const nanowire = new MatDef("Nano Wire", [3, 5], [carbfibre, glass], [2, 4], 32);
-  const computer = new MatDef("Computer", [4, 7.5], [heat_sink, metal_frame, circuit], [3, 1, 2], 33);
+  const computer = new MatDef("Computer", [4, 7.5], [heat_sink, metal_frame, circuit], [3, 1, 3], 33);
   const ind_frame = new MatDef("Industrial Frame", [4, 3], [concrete, metal_frame, carbide], [6, 2, 8], 34);
   const gyroscope = new MatDef("Gyroscope", [3, 5], [copper_wire, rotor], [12, 2], 35);
   const stabilizer = new MatDef("Stabilizer", [4, 2.5], [computer, motor, gyroscope], [1, 1, 2], 36);
