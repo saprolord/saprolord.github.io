@@ -125,7 +125,7 @@ justify-content: center;
 }
 
 .ico{
-	width: 25px;
+	max-width: 25px;
 }
 
 .headIco{
