@@ -95,14 +95,15 @@ function factorycalc() {
   createTreeLevel('TreeTop','tree0');
   'Launch main function to calculate the required materials'
   calculate(materialdata[index], rate,'tree0',0);
-  materialOutput();
 
+  materialOutput();
   document.getElementById("TreeTop").style.display = "flex";
   document.getElementById("box3").style.display = "flex";
+
   if (window.matchMedia("(max-width: 800px)").matches) {
     document.getElementById("box3").style.width = "100%";
     document.getElementById("levelfact").style.width = "100%";
-    document.getElementById('box3').scrollIntoView();
+    "document.getElementById('box3').scrollIntoView()"
   } else {
     document.getElementById("box3").style.width = "30%";
     document.getElementById("levelfact").style.width = "30%";
@@ -205,9 +206,19 @@ function materialOutput() {
     if (i < 10) {
       matId = ("mat0" + i);
       document.getElementById(matId).innerHTML = Math.round(total * 1000) / 1000;
+      if (document.getElementById(matId).innerHTML==0){
+        document.getElementById("matDiv0" + i).style.display= "none";
+      } else{
+        document.getElementById("matDiv0" + i).style.display = "flex";
+      }
     } else {
       matId = ("mat" + i);
-      document.getElementById(matId).innerHTML = Math.round(total * 1000) / 1000;;
+      document.getElementById(matId).innerHTML = Math.round(total * 1000) / 1000;
+      if (document.getElementById(matId).innerHTML == 0) {
+        document.getElementById("matDiv" + i).style.display = "none";
+      } else {
+        document.getElementById("matDiv" + i).style.display = "flex";
+      }
     }
   }
 }
