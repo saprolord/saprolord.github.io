@@ -64,10 +64,6 @@ function factorycalc() {
   materialtotal.length = 49;
   zero(materialtotal);
 
-  'Global coordinats tracker'
-  xpos = 5;
-  ypos = 4;
-
   '_________________________'
   'END OF GLOBAL VARIABLE'
 
@@ -94,27 +90,25 @@ function factorycalc() {
     materialdata[i].factory[1] = materialdata[i].factory[1] * boostFactory[levelFactory[materialdata[i].factory[0]]];
   }
 
-  const svg = document.querySelector('svg');
-  clear(svg);
-
+  var treeBox = document.getElementById('TreeTop');
+  erase('TreeTop');
+  createTreeLevel('TreeTop','tree0');
   'Launch main function to calculate the required materials'
-  calculate(materialdata[index], rate);
+  calculate(materialdata[index], rate,'tree0',0);
   materialOutput();
 
+  document.getElementById("TreeTop").style.display = "flex";
   document.getElementById("box3").style.display = "flex";
   if (window.matchMedia("(max-width: 800px)").matches) {
     document.getElementById("box3").style.width = "100%";
     document.getElementById("levelfact").style.width = "100%";
-    document.getElementById('box3').scrollIntoView()
+    "document.getElementById('box3').scrollIntoView()"
   } else {
     document.getElementById("box3").style.width = "30%";
     document.getElementById("levelfact").style.width = "30%";
-
   }
-
   'END'
 }
-
 
 function zero(material) {
   'Set an array to have all value as zero'
@@ -123,60 +117,65 @@ function zero(material) {
   }
 }
 
-function tier1(chkarr) {
-  'Check if a material is composed of only base materials'
-  var isTier1 = false;
-  if (chkarr[2] == 0) {
-    isTier1 = true;
-  }
-  return isTier1;
-}
-
-function calculate(material, rate) {
-  var start = ypos;
-  'If the material is a Tier 1, write the input materials required in a column, then go back to the previous column'
+function calculate(material, rate,divParentId,boxId) {
+  var divParent = document.getElementById(divParentId);
+  var matChildren=document.createElement('div');
+  var treeLevel=document.createElement('div');
+  var branchBox=document.createElement('div');
+  var matBox=document.createElement('div');
+  var tempParentId=0
 
   if (material.recipe == 0) {
-    if (xpos > svg.getAttribute('width')) {
-      svg.setAttribute('width', xpos + 250);
-    }
-    drawMatBox([material.name, rate, factoryname(material.factory[0]), Math.ceil(rate / material.factory[1])], [xpos, ypos]);
+    //raw material with no recipe 
+    createMatDetail(material.name, rate, factoryname(material.factory[0]), Math.ceil(rate / material.factory[1]),divParentId,'matDet'+boxId,material.ID)
+    //add the material to the total required
     materialtotal[material.ID] = materialtotal[material.ID] + rate;
   } else {
-    drawMatBox([material.name, rate, factoryname(material.factory[0]), Math.ceil(rate / material.factory[1])], [xpos, ypos]);
+    //create a Material box with the material detail
+    createMatBox(material.name, rate, factoryname(material.factory[0]), Math.ceil(rate / material.factory[1]), divParentId, 'matBox' + boxId, material.ID)
+    //add the material to the total required
     materialtotal[material.ID] = materialtotal[material.ID] + rate;
+    //store the current Id and create a MatChildren box to contain the material(s) required in the recipe
+    createMatChildren(divParentId,'child'+boxId);
+    tempParentId = boxId
     if (material.recipe.length == 1) {
-      lineconnect([xpos + 150, ypos + 35], [xpos + 200, ypos + 35]);
-      xpos = xpos + 200;
-      if (xpos + 200 > svg.getAttribute('width')) {
-        svg.setAttribute('width', xpos + 250);
-      }
-      calculate(material.recipe[0], material.quantity[0] * rate);
-      xpos = xpos - 200;
+      // there is only one material required
+      boxId=boxId+1
+      createTreeLevel('child' + tempParentId, 'tree' + boxId);
+      createBranchStraight('tree' + boxId);
+      boxId=calculate(material.recipe[0], material.quantity[0] * rate, 'tree' + boxId,boxId);
     } else {
-
-      for (var i = 0; i < material.recipe.length; i++) {
-        if (i > 0) {
-          lineconnect([xpos + 192, start + 35], [xpos + 192, ypos + 135]);
-          lineconnect([xpos + 192, ypos + 135], [xpos + 200, ypos + 135]);
-          ypos = ypos + 100;
-          if (ypos + 70 > svg.getAttribute('height')) {
-            svg.setAttribute('height', ypos + 80);
+        // there is more than one material required
+        for (var i = 0; i < material.recipe.length; i++) {
+          boxId=boxId+1
+          createTreeLevel('child' + tempParentId, 'tree' + boxId);
+          if (i == 0) {
+            //it is the first item in the recipe - create a branch going down'
+            createBranchDown('tree' + boxId); 
+          } else {
+            if(i<material.recipe.length-1){
+              //it is neither the first or last item in the recipe - create a fork')              
+              createBranchFork('tree' + boxId);
+            } else{
+              //it is the last item in the recipe - create a branch end
+              createBranchEnd('tree' + boxId);
+            }
           }
-        } else {
-          lineconnect([xpos + 185, start + 35], [xpos + 200, ypos + 35]);
+          boxId=calculate(material.recipe[i], material.quantity[i] * rate, 'tree' + boxId, boxId);  
         }
-        xpos = xpos + 200;
-        if (xpos + 200 > svg.getAttribute('width')) {
-          svg.setAttribute('width', xpos + 210);
-        }
-        calculate(material.recipe[i], material.quantity[i] * rate);
-        xpos = xpos - 200;
       }
     }
-  }
+    return boxId;
 }
 
+function createTreeLevel(divParentId, boxId) {
+  //create a TreeLevel div with the id 'boxId' and append it to divParentId
+  var treeLevel = document.createElement('div');
+  var divParent = document.getElementById(divParentId);
+  treeLevel.setAttribute('class', 'treeLevel');
+  treeLevel.id = boxId;
+  divParent.appendChild(treeLevel);
+}
 
 function factoryname(id) {
   'Retrun the string of the name of the factory associated with the index "id" '
@@ -189,113 +188,11 @@ function factoryname(id) {
   if (id == 5) { return "Forge" };
   if (id == 6) { return "Manufacturer" };
   if (id == 7) { return "Earth Teleporter" };
-
 }
 
-function clear(prnt) {
-  'Clear the svg space (svg space as input)'
-  let children = prnt.children;
-  for (let i = 0; i < children.length;) {
-    let el = children[i];
-    if (el.tagName !== 'defs') {
-      el.remove();
-    } else (i++);
-  }
-}
-
-function lineconnect([x1, y1], [x2, y2]) {
-  const svg = document.querySelector('svg');
-  const newLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-  newLine.setAttribute('x1', x1);
-  newLine.setAttribute('y1', y1);
-  newLine.setAttribute('x2', x2);
-  newLine.setAttribute('y2', y2);
-  newLine.setAttribute('stroke', '#000000');
-  newLine.setAttribute('stroke-width', '1');
-  svg.appendChild(newLine);
-}
-
-function drawMatBox(matdata, coord) {
-  const svg = document.querySelector('svg');
-  const rect1 = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-  const rect2 = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-  const rect3 = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-  const rect4 = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-  const text1 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-  const text2 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-  const text3 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-  const text4 = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-
-  if (matdata.length != 4) {
-    matdata[0] = 'INVALID!';
-    matdata[1] = 'INVALID!';
-    matdata[2] = 'INVALID!';
-    matdata[3] = 'INVALID!';
-  }
-
-  var material = matdata[0];
-  var rate = Math.round(matdata[1] * 10000) / 10000;
-  var workshop = matdata[2];
-  var qty = Math.round(matdata[3] * 10000) / 10000;
-  var x = coord[0];
-  var y = coord[1];
-
-  rect1.setAttribute('x', x);
-  rect1.setAttribute('y', y);
-  rect1.setAttribute('width', '150');
-  rect1.setAttribute('height', '35');
-  rect1.setAttribute('fill', '#99EDC3');
-  rect1.setAttribute('stroke', '#000000');
-  rect1.setAttribute('stroke-width', '1');
-  svg.appendChild(rect1);
-
-  rect2.setAttribute('x', x);
-  rect2.setAttribute('y', y + 35);
-  rect2.setAttribute('width', '150');
-  rect2.setAttribute('height', '35');
-  rect2.setAttribute('fill', '#E6DBAC');
-  rect2.setAttribute('stroke', '#000000');
-  rect2.setAttribute('stroke-width', '1');
-  svg.appendChild(rect2);
-
-  rect3.setAttribute('x', x + 150);
-  rect3.setAttribute('y', y);
-  rect3.setAttribute('width', '35');
-  rect3.setAttribute('height', '35');
-  rect3.setAttribute('fill', '#FFFFFF');
-  rect3.setAttribute('stroke', '#000000');
-  rect3.setAttribute('stroke-width', '1');
-  svg.appendChild(rect3);
-
-  rect4.setAttribute('x', x + 150);
-  rect4.setAttribute('y', y + 35);
-  rect4.setAttribute('width', '35');
-  rect4.setAttribute('height', '35');
-  rect4.setAttribute('fill', '#FFFFFF');
-  rect4.setAttribute('stroke', '#000000');
-  rect4.setAttribute('stroke-width', '1');
-  svg.appendChild(rect4);
-
-  text1.setAttributeNS(null, "x", x + 10);
-  text1.setAttributeNS(null, "y", y + 20);
-  text1.appendChild(document.createTextNode(material));
-  svg.appendChild(text1);
-
-  text2.setAttributeNS(null, "x", x + 10);
-  text2.setAttributeNS(null, "y", y + 55);
-  text2.appendChild(document.createTextNode(workshop));
-  svg.appendChild(text2);
-
-  text3.setAttributeNS(null, "x", x + 160);
-  text3.setAttributeNS(null, "y", y + 20);
-  text3.appendChild(document.createTextNode(rate));
-  svg.appendChild(text3);
-
-  text4.setAttributeNS(null, "x", x + 160);
-  text4.setAttributeNS(null, "y", y + 55);
-  text4.appendChild(document.createTextNode(qty));
-  svg.appendChild(text4);
-
+function erase(divId) {
+  // Clear the div space (divId space as input)
+  document.getElementById(divId).innerHTML="";
 }
 
 function materialOutput() {
@@ -330,3 +227,205 @@ class MatDef {
   }
 }
 
+function createBranchStraight(divParentId){
+  //create a simple horizontal branch "-"
+  //appends to divParentId
+  var branchBox = document.createElement('div');
+  var branchSimple= document.createElement('div');
+  var parentDiv =document.getElementById(divParentId);
+
+  branchBox.setAttribute('class','branchBox');
+  branchSimple.setAttribute('class','branchSimple');
+
+  branchBox.appendChild(branchSimple);
+  parentDiv.appendChild(branchBox);
+
+}
+
+function createBranchDown(divParentId) {
+  //create a straight down "¦" branch to be continued downward
+  //appends to divParentId
+  var branchBox = document.createElement('div');
+  var branchSimple = document.createElement('div');
+  var branchDown = document.createElement('div');
+  var parentDiv = document.getElementById(divParentId);
+
+  branchBox.setAttribute('class', 'branchBox');
+  branchSimple.setAttribute('class', 'branchSimple');
+  branchDown.setAttribute('class', 'branchDown');
+
+  branchBox.appendChild(branchSimple);
+  branchBox.appendChild(branchDown);
+  parentDiv.appendChild(branchBox);
+}
+
+function createBranchEnd(divParentId) {
+  //create a "L" end of branch
+  //appends to divParentId
+  var branchBox = document.createElement('div');
+  var branchEnd = document.createElement('div');
+  var parentDiv = document.getElementById(divParentId);
+
+  branchBox.setAttribute('class', 'branchBox');
+  branchEnd.setAttribute('class', 'branchEnd');
+
+  branchBox.appendChild(branchEnd);
+  parentDiv.appendChild(branchBox);
+}
+
+function createBranchFork(divParentId) {
+  //create a fork in the branch
+  //appends to divParentId
+  var branchBox = document.createElement('div');
+  var branchEnd = document.createElement('div');
+  var branchDown = document.createElement('div');
+  var parentDiv = document.getElementById(divParentId);
+
+  branchBox.setAttribute('class', 'branchBox');
+  branchEnd.setAttribute('class', 'branchEnd');
+  branchDown.setAttribute('class', 'branchDown');
+
+  branchBox.appendChild(branchEnd);
+  branchBox.appendChild(branchDown);
+  parentDiv.appendChild(branchBox);
+}
+
+function createMatBox(material, rate, factory, qty, divParentId, boxId, matId){
+  //create a material box, consisting of a material detail box (material, rate, factory, qty)
+  //and a "-" sign 
+  //appends to divParentId (meant to go in a TreeLevel div)
+  var matBox = document.createElement('div');
+  var sign = document.createElement('div');
+  var parentDiv = document.getElementById(divParentId);
+  var tempId = "";
+  
+  matBox.setAttribute('class','matBox');
+  matBox.id = boxId;
+  sign.innerHTML = '<img src="https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Minus_Sign.png" style="width:15px;height:15px;" alt="-">'
+  sign.setAttribute('class','plusMinus');
+  
+  parentDiv.appendChild(matBox);
+  createMatDetail(material, rate, factory, qty, matBox.id, boxId, matId);
+  matBox.appendChild(sign);
+  tempId=divParentId.substring(4);
+  matBox.setAttribute("onClick", "collapse("+tempId+")");
+
+}
+
+function createMatDetail(material, rate, factory, qty, divParentId, boxId, matId){
+  //create a material detail box with its picture (matId), material name, 
+  //calculated rate,factory required and qty of factories required
+  //appends to divParentId (meant to go in a matBox div)
+  var matDetail = document.createElement('div');
+  var matName = document.createElement('div');
+  var matRate =  document.createElement('div');
+  var factoryName = document.createElement('div');
+  var factoryNum = document.createElement('div');
+  var spacer = document.createElement('div');
+  var icon = document.createElement('img');
+  var parentDiv = document.getElementById(divParentId);
+
+  matDetail.id = boxId
+  matDetail.setAttribute('class','matDetail');
+
+  icon.setAttribute('class','ico');
+  icon.src=findIcon(matId);
+  icon.setAttribute('width', '20px');
+  icon.setAttribute('height', '20px');
+  icon.setAttribute('alt', 'iron');
+
+  matName.setAttribute('class', 'matName');
+  matName.innerHTML = material;
+  matName.prepend(icon);
+  matRate.setAttribute('class', 'matRate');
+  matRate.innerHTML=rate;
+  factoryName.setAttribute('class', 'factoryName');
+  factoryName.innerHTML=factory;
+  factoryNum.setAttribute('class', 'factoryNum');
+  factoryNum.innerHTML=qty;
+  spacer.setAttribute('class','spacer');
+
+  matDetail.appendChild(matName);
+  matDetail.appendChild(matRate);
+  matDetail.appendChild(factoryName);
+  matDetail.appendChild(factoryNum);
+  matDetail.appendChild(spacer);
+
+  parentDiv.appendChild(matDetail);
+}
+
+function createMatChildren(divParentId, boxId) {
+  //create a matChildren div with the id 'boxId' and append it to divParentId
+  var matChildren = document.createElement('div');
+  var divParent = document.getElementById(divParentId);
+  matChildren.setAttribute('class', 'matChildren');
+  matChildren.id = boxId;
+  divParent.appendChild(matChildren);
+}
+
+function collapse(childId){
+  var sign = document.createElement('div');
+  sign.setAttribute('class', 'plusMinus');
+  //hide the div chilID if visible, unhide it if hidden.
+  if (document.getElementById('child'+childId).style.display == 'none') {
+    document.getElementById('child' + childId).style.display = 'flex'
+    document.getElementById('matBox' + childId).lastElementChild.innerHTML = innerHTML = '<img src="https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Minus_Sign.png" style="width:15px;height:15px;" alt="-">';
+  }else { 
+    document.getElementById('child' + childId).style.display = 'none'
+    document.getElementById('matBox' + childId).lastElementChild.innerHTML = innerHTML = '<img src="https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Plus_Sign.png" style="width:15px;height:15px;" alt="-">';
+    }
+}
+
+function findIcon(id){
+  //returns the url to the picture of the material identified by "id"
+  if (id == 0) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Wood_Log.png" };
+  if (id == 1) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Copper_ore.png" };
+  if (id == 2) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Iron_Ore.png" };
+  if (id == 3) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Stone.png" };
+  if (id == 4) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Wolframite.png" };
+  if (id == 5) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Coal.png" };
+  if (id == 6) { return "https://github.com/saprolord/saprolord.github.io/blob/main/image/Wood_Plank.png?raw=true" };
+  if (id == 7) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Wooden_Frame.png" };
+  if (id == 8) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Copper_Ingot.png" };
+  if (id == 9) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Copper_Wire.png" };
+  if (id == 10) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Iron_Ingot.png" };
+  if (id == 11) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Iron_Gear.png" };
+  if (id == 12) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Sand.png" };
+  if (id == 13) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Silicon.png" };
+  if (id == 14) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Glass.png" };
+  if (id == 15) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Tungsten_Ore.png" };
+  if (id == 16) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Graphite.png" };
+  if (id == 17) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Tungsten_Carbide.png" };
+  if (id == 18) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Coupler.png" };
+  if (id == 19) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Condenser_Lens.png" };
+  if (id == 20) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Heat_Sink.png" };
+  if (id == 21) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Iron_Plate.png" };
+  if (id == 22) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Electromagnet.png" };
+  if (id == 23) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Metal_Frame.png" };
+  if (id == 24) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Steel.png" };
+  if (id == 25) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Steel_Rod.png" };
+  if (id == 26) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Rotor.png" };
+  if (id == 27) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Concrete.png" };
+  if (id == 28) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Battery.png" };
+  if (id == 29) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Electric_Motor.png" };
+  if (id == 30) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Logic_Circuit.png" };
+  if (id == 31) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Carbon_Fibre.png" };
+  if (id == 32) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Nanowire.png" };
+  if (id == 33) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Computer.png" };
+  if (id == 34) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Industrial_Frame.png" };
+  if (id == 35) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Gyroscope.png" };
+  if (id == 36) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Stabiliser.png" };
+  if (id == 37) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Mag_Field_Gen.png" };
+  if (id == 38) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Quantum_Entangler.png" };
+  if (id == 39) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Electron_Microscope.png" };
+  if (id == 40) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/TurboCharger.png" };
+  if (id == 41) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/SuperComputer.png" };
+  if (id == 42) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Atomic_Locator.png" };
+  if (id == 43) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Energy_Cube.png" };
+  if (id == 44) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Tank.png" };
+  if (id == 45) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Matter_Compressor.png" };
+  if (id == 46) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Particle_Glue.png" };
+  if (id == 47) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Matter_Duplicator.png" };
+  if (id == 48) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Earth_Token.png" };
+
+}
