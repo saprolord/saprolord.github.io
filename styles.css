@@ -99,7 +99,6 @@ align-items: center;
 display: none;
 flex-direction: column;
 background: #f2f2f2;
-margin: 5px;
 align-items: center;
 justify-content: center;
 width: 30%;
@@ -128,6 +127,160 @@ justify-content: center;
 .ico{
 	width: 25px;
 }
+
+.headIco{
+  max-width: 50px;
+  max-height:50px;
+  border: 1px solid green
+}
+
+.treeBox{
+  display: flex;
+  border: 0px solid black;
+  padding: 5px;
+  /*overflow-x: auto;*/
+  /*width: 100%;*/
+}
+
+.matBox{
+  display: flex;
+  cursor: pointer;
+}
+
+.matIco{
+  display:flex;
+  width:30px;
+  height:70px;
+  box-sizing: border-box;
+  border: 1px solid black;
+  border-right: none;
+  align-content: center;
+  align-items: center;
+}
+
+.plusMinus{
+  display:flex;
+  width:15px;
+  height:70px;
+  border: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.matDetail{
+  display: flex;
+  flex-wrap: wrap;
+  width: 190px;
+  height:85px;
+}
+
+.matName{
+  display: flex;
+  align-items:center;
+  justify-content:center;
+  width:150px;
+  height: 35px;
+  border: 1px solid black;
+  background:  rgb(199, 226, 200);
+  box-sizing: border-box;
+}
+
+.factoryName{
+  display: flex;
+  align-items:center;
+  justify-content:center;
+  width:150px;
+  height: 35px;
+  border: 1px solid black;
+  border-top: none;
+  background:  rgb(221, 211, 165);
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.matRate{
+  display: flex;
+  align-items:center;
+  justify-content:center;
+  width:40px;
+  height: 35px;
+  border: 1px solid black;
+  border-left: none;
+  background:  #FFFFFF;
+  box-sizing: border-box;
+}
+
+.factoryNum{
+  display: flex;
+  align-items:center;
+  justify-content:center;
+  width:40px;
+  height: 35px;
+  border-bottom: 1px solid black;
+  border-right: 1px solid black;
+  background:  #FFFFFF;
+  box-sizing: border-box;
+}
+
+.spacer{
+  display: flex;
+  width: 190px;
+  height: 15px;
+
+}
+
+.branchBox{
+  display: flex;
+  align-content: stretch;
+  flex-direction: column;
+  width: 10px;
+}
+
+.branchOut{
+  width:10px;
+  height: 35px;
+  border-bottom: 1px solid black;
+  box-sizing: border-box;
+}
+
+.branchSimple{
+  width:10px;
+  height: 35px;
+  border-bottom: 1px solid black;
+  box-sizing: border-box;
+}
+
+.branchEnd{
+  width:10px;
+  height: 35px;
+  border-bottom: 1px solid black;
+  border-left: 1px solid black;
+  box-sizing: border-box;
+}
+
+.branchDown{
+  width:10px;
+  flex-grow: 2;
+  border-left: 1px solid black;
+  box-sizing: border-box;
+}
+
+.matRecipe{
+  display: flex;
+  box-sizing: border-box;
+}
+
+.matChildren{
+  display: flex;
+  flex-direction:column;
+  box-sizing: border-box;
+}
+
+.treeLevel{
+  display: flex;
+  box-sizing: border-box;
+  }
+
 
 @media screen and (max-width: 800px){
   .mainbox{
