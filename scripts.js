@@ -103,7 +103,7 @@ function factorycalc() {
   if (window.matchMedia("(max-width: 800px)").matches) {
     document.getElementById("box3").style.width = "100%";
     document.getElementById("levelfact").style.width = "100%";
-    "document.getElementById('box3').scrollIntoView()"
+    document.getElementById('box3').scrollIntoView()
   } else {
     document.getElementById("box3").style.width = "30%";
     document.getElementById("levelfact").style.width = "30%";
@@ -349,7 +349,7 @@ function createMatDetail(material, rate, factory, qty, divParentId, boxId, matId
   matName.innerHTML = material;
   matName.prepend(icon);
   matRate.setAttribute('class', 'matRate');
-  matRate.innerHTML=rate;
+  matRate.innerHTML = Math.round(rate * 100) / 100;
   factoryName.setAttribute('class', 'factoryName');
   factoryName.innerHTML=factory;
   factoryNum.setAttribute('class', 'factoryNum');
