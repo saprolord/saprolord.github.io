@@ -104,7 +104,8 @@ justify-content: center;
 width: 30%;
 border: 1px solid black;
 padding: 5px;
-
+margin-right:5px;
+margin: 5px;
 }
 
 .subbox3{
@@ -116,12 +117,14 @@ justify-content: center;
 
 .matsum{
 	display:flex;
-	width:54px;
+  align-items: center;
+	min-width:54px;
 	margin: 5px;
 }
 
 .matout{
-  width: 38px;
+  display: flex;
+  min-width: 38px;
 }
 
 .ico{
@@ -282,6 +285,7 @@ justify-content: center;
   }
 
 
+
 @media screen and (max-width: 800px){
   .mainbox{
   flex-direction: column;
@@ -296,6 +300,11 @@ justify-content: center;
   }
   .box2{
   flex-direction: column;
+  width: 100%;
+  margin: 5px 0px;
+  padding: 0px;
+  }
+  .box3{
   width: 100%;
   margin: 5px 0px;
   padding: 0px;
