@@ -56,23 +56,22 @@ function factorycalc() {
   const earth_token = new MatDef("Earth Token", [7, 60 / 42], [duplicator], [1], 48);
 
 
-  '________________________'
-  'GLOBAL VARIABLES'
-  'Material data matrix'
+'________________________'
+'GLOBAL VARIABLES'
+'Material data matrix'
   materialdata = [wood_log, copper, iron, stone, wolfram, coal, wood_plank, wood_frame, copper_ingot, copper_wire, iron_ingot, iron_gear, sand, silicon, glass, tungsten, graphite, carbide, coupler, lens, heat_sink, iron_plate, emagnet, metal_frame, steel, steel_rod, rotor, concrete, battery, motor, circuit, carbfibre, nanowire, computer, ind_frame, gyroscope, stabilizer, mag_field, quantum, microscope, turbocharg, supercomp, atomic, energy_cube, tank, compressor, particle, duplicator, earth_token,];
+'Total required for each material array initialisation'
   materialtotal = [0];
   materialtotal.length = 49;
   zero(materialtotal);
+'_________________________'
+'END OF GLOBAL VARIABLE'
 
-  '_________________________'
-  'END OF GLOBAL VARIABLE'
-
-  'Get user input'
-
+'Get user input'
   var index = document.getElementById('material').value;
   var rate = document.getElementById('rate').value;
 
-  'Get Level of factories'
+'Get Level of factories'
   var levelA = document.getElementById('extractor').value;
   var levelB = document.getElementById('workshop').value;
   var levelC = document.getElementById('furnace').value;
@@ -81,29 +80,39 @@ function factorycalc() {
   var levelF = document.getElementById('forge').value;
   var levelG = document.getElementById('manufacturer').value;
   var levelH = document.getElementById('teleporter').value;
-
+'make an array with all the factory levels selected'
   var levelFactory = [levelA, levelB, levelC, levelD, levelE, levelF, levelG, levelH];
+'array of the effective boost for each level (1 to 5)'
   var boostFactory = [1, 1.5, 2, 3, 4];
 
-  'Assign new rates in relation to the "tier" or "Level" assigned to each factories'
+'Assign new rates in relation to the "tier" or "Level" assigned to each factories'
   for (i = 0; i < materialdata.length; i++) {
     materialdata[i].factory[1] = materialdata[i].factory[1] * boostFactory[levelFactory[materialdata[i].factory[0]]];
   }
 
+'Get the main div element where the tree will appear and clear it'
   var treeBox = document.getElementById('TreeTop');
   erase('TreeTop');
-  createTreeLevel('TreeTop','tree0');
-  'Launch main function to calculate the required materials'
-  calculate(materialdata[index], rate,'tree0',0);
+'Create the first "treeBox" div element'
+  createTreeLevel('TreeTop','tree10000');
 
+'Launch main function to calculate the required materials'
+  calculate(materialdata[index], rate,'tree10000',10000);
+
+'update and show the div element with the required material'
   materialOutput();
   document.getElementById("TreeTop").style.display = "flex";
   document.getElementById("box3").style.display = "flex";
 
+'create the tier buttons'
+  createTierButton();
+
+
+'adjust the div boxes if the screen is narrow'
   if (window.matchMedia("(max-width: 800px)").matches) {
     document.getElementById("box3").style.width = "100%";
     document.getElementById("levelfact").style.width = "100%";
-    document.getElementById('box3').scrollIntoView()
+    "document.getElementById('box3').scrollIntoView()"
   } else {
     document.getElementById("box3").style.width = "30%";
     document.getElementById("levelfact").style.width = "30%";
@@ -138,7 +147,8 @@ function calculate(material, rate,divParentId,boxId) {
     materialtotal[material.ID] = materialtotal[material.ID] + rate;
     //store the current Id and create a MatChildren box to contain the material(s) required in the recipe
     createMatChildren(divParentId,'child'+boxId);
-    tempParentId = boxId
+    tempParentId = boxId;
+    boxId=boxId+10000;
     if (material.recipe.length == 1) {
       // there is only one material required
       boxId=boxId+1
@@ -165,6 +175,7 @@ function calculate(material, rate,divParentId,boxId) {
           boxId=calculate(material.recipe[i], material.quantity[i] * rate, 'tree' + boxId, boxId);  
         }
       }
+    boxId = boxId - 10000;
     }
     return boxId;
 }
@@ -375,16 +386,65 @@ function createMatChildren(divParentId, boxId) {
 }
 
 function collapse(childId){
+  
+  //hide the div chilID if visible, unhide it if hidden.
+  if (document.getElementById('child'+childId).style.display == 'none') {showChild(childId)}
+  else { hideChild(childId)}
+}
+
+function collapseRank(rank){
+  const allChild = document.getElementsByClassName('matChildren');
+  var size = allChild.length;
+  var tempStr ="";
+  for (i=0; i<size; i++){
+    tempStr=allChild[i].id;
+    if ((tempStr.substring(5,6))>rank){
+      hideChild(allChild[i].id.substring(5));
+    } else {
+      showChild(allChild[i].id.substring(5));
+    }
+  }
+}
+
+function hideChild(childId){
   var sign = document.createElement('div');
   sign.setAttribute('class', 'plusMinus');
-  //hide the div chilID if visible, unhide it if hidden.
-  if (document.getElementById('child'+childId).style.display == 'none') {
-    document.getElementById('child' + childId).style.display = 'flex'
-    document.getElementById('matBox' + childId).lastElementChild.innerHTML = innerHTML = '<img src="https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Minus_Sign.png" style="width:15px;height:15px;" alt="-">';
-  }else { 
-    document.getElementById('child' + childId).style.display = 'none'
-    document.getElementById('matBox' + childId).lastElementChild.innerHTML = innerHTML = '<img src="https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Plus_Sign.png" style="width:15px;height:15px;" alt="-">';
+  document.getElementById('child' + childId).style.display = 'none'
+  document.getElementById('matBox' + childId).lastElementChild.innerHTML = innerHTML = '<img src="https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Plus_Sign.png" style="width:15px;height:15px;" alt="-">';
+}
+
+function showChild(childId){
+  var sign = document.createElement('div');
+  sign.setAttribute('class', 'plusMinus');
+  document.getElementById('child' + childId).style.display = 'flex'
+  document.getElementById('matBox' + childId).lastElementChild.innerHTML = innerHTML = '<img src="https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Minus_Sign.png" style="width:15px;height:15px;" alt="-">';
+}
+
+function createTierButton(){
+  var buttonBox = document.getElementById("buttonBox");
+  const allChild = document.getElementsByClassName('matChildren');
+  var size = allChild.length;
+  var tempStr = "";
+  var rank =0
+  
+  erase("buttonBox");
+  for (i = 0; i < size; i++) {
+    tempStr=allChild[i].id;
+    if ((tempStr.substring(5, 6)) > rank) { rank = allChild[i].id.substring(5,6)};
+  }
+  for (i=1;i<=rank;i++){
+    tempDiv = document.createElement('Div');
+    tempDiv.id = "rank"+i;
+    if (i==1) { tempDiv.setAttribute("class","buttonStart")}
+    else{
+      if (i == rank) { tempDiv.setAttribute("class", "buttonEnd")}
+      else { tempDiv.setAttribute("class", "buttonMid")}
     }
+    tempDiv.innerHTML = i;
+    tempDiv.setAttribute("onclick","collapseRank("+i+")")
+    buttonBox.appendChild(tempDiv);  
+  }
+  buttonBox.style.display="flex";
 }
 
 function findIcon(id){
