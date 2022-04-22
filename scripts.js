@@ -432,19 +432,21 @@ function createTierButton(){
     tempStr=allChild[i].id;
     if ((tempStr.substring(5, 6)) > rank) { rank = allChild[i].id.substring(5,6)};
   }
-  for (i=1;i<=rank;i++){
-    tempDiv = document.createElement('Div');
-    tempDiv.id = "rank"+i;
-    if (i==1) { tempDiv.setAttribute("class","buttonStart")}
-    else{
-      if (i == rank) { tempDiv.setAttribute("class", "buttonEnd")}
-      else { tempDiv.setAttribute("class", "buttonMid")}
+  if(i>1){
+    for (i=1;i<=rank;i++){
+      tempDiv = document.createElement('Div');
+      tempDiv.id = "rank"+i;
+      if (i==1) { tempDiv.setAttribute("class","buttonStart")}
+      else{
+        if (i == rank) { tempDiv.setAttribute("class", "buttonEnd")}
+        else { tempDiv.setAttribute("class", "buttonMid")}
+      }
+      tempDiv.innerHTML = i;
+      tempDiv.setAttribute("onclick","collapseRank("+i+")")
+      buttonBox.appendChild(tempDiv);  
     }
-    tempDiv.innerHTML = i;
-    tempDiv.setAttribute("onclick","collapseRank("+i+")")
-    buttonBox.appendChild(tempDiv);  
+    buttonBox.style.display="flex";
   }
-  buttonBox.style.display="flex";
 }
 
 function findIcon(id){
