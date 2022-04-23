@@ -449,6 +449,16 @@ function createTierButton(){
   }
 }
 
+function maxFactory(){
+  document.getElementById("extractor").selectedIndex = "4";
+  document.getElementById("workshop").selectedIndex = "3";
+  document.getElementById("furnace").selectedIndex = "3";
+  document.getElementById("machine").selectedIndex = "3";
+  document.getElementById("industrial").selectedIndex = "3";
+  document.getElementById("forge").selectedIndex = "3";
+  document.getElementById("manufacturer").selectedIndex = "3";
+}
+
 function findIcon(id){
   //returns the url to the picture of the material identified by "id"
   if (id == 0) { return "https://raw.githubusercontent.com/saprolord/saprolord.github.io/main/image/Wood_Log.png" };
